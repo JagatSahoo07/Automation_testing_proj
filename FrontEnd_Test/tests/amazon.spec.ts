@@ -1,7 +1,10 @@
-import { test, expect } from "@playwright/test";
+import { test, chromium, expect } from "@playwright/test";
 
-test("Search Phone", async ({ page }) => {
-  //Visit the amazon page
+export async function amazon() {
+  const browser = await chromium.launch({ headless: false });
+  const context = await browser.newContext();
+  const page = await context.newPage();
+
   await page.goto("https://amazon.in");
 
   //expect a title of the page
@@ -10,7 +13,7 @@ test("Search Phone", async ({ page }) => {
   );
 
   //Search a product
-  await page.locator('input[type="text"]').fill("motorola edge 40");
+  await page.locator('input[type="text"]').fill("motorola edge 40 neo");
   await page.locator('input[type="submit"]').click();
 
   //Select the product
@@ -20,5 +23,18 @@ test("Search Phone", async ({ page }) => {
     )
     .click();
 
+  // Capture product details
+  const productDetails = await page.evaluate(() => {
+    const firstProduct = document.querySelector(".s-main-slot .s-result-item");
+    console.log(firstProduct);
+
+    // const productName = firstProduct.querySelector("h2 a span").innerText;
+    // const productPrice = firstProduct.querySelector(".a-price-whole")
+    //   ? firstProduct.querySelector(".a-price-whole").innerText
+    //   : "Price not available";
+    // const productLink = firstProduct.querySelector("h2 a").href;
+    // return { productName, productPrice, productLink };
+  });
+  console.log("Amazon Product Details:", productDetails);
   await page.waitForTimeout(5000);
-});
+}
