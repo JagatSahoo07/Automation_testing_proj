@@ -16,6 +16,9 @@ export async function amazon() {
   await page.locator('input[type="text"]').fill("motorola edge 40 neo");
   await page.locator('input[type="submit"]').click();
 
+  // Wait for the results page to load and display the results
+  await page.waitForSelector(".s-main-slot");
+
   //Select the product
   await page
     .locator(
@@ -23,18 +26,21 @@ export async function amazon() {
     )
     .click();
 
-  // Capture product details
-  const productDetails = await page.evaluate(() => {
-    const firstProduct = document.querySelector(".s-main-slot .s-result-item");
-    console.log(firstProduct);
+  // // Wait for the product page to load
+  // await page.waitForSelector(".centerColAlign", { timeout: 10000 });
 
-    // const productName = firstProduct.querySelector("h2 a span").innerText;
-    // const productPrice = firstProduct.querySelector(".a-price-whole")
-    //   ? firstProduct.querySelector(".a-price-whole").innerText
-    //   : "Price not available";
-    // const productLink = firstProduct.querySelector("h2 a").href;
-    // return { productName, productPrice, productLink };
-  });
-  console.log("Amazon Product Details:", productDetails);
+  // Get the text content of the productTitle span element
+  // const productTitleText = await page.textContent('//span[@id="productTitle"]');
+  // console.log("Product Title:", productTitleText.trim()); // Trim to remove any extra whitespace
+
+  // Capture product details
+
+  // const productDetails = await page.evaluate(() => {
+  const Product = await page.locator("span#productTitle");
+  const firstProduct = Product.allInnerTexts();
+  console.log(firstProduct);
+
+  // });
+  // console.log("Amazon Product Details:", productDetails);
   await page.waitForTimeout(5000);
 }
