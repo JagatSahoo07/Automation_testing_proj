@@ -19,6 +19,9 @@ export async function amazon() {
   // Wait for the results page to load and display the results
   await page.waitForSelector(".s-main-slot");
 
+  //wait before new page loads
+  const pagePromise = context.waitForEvent("page");
+
   //Select the product
   await page
     .locator(
@@ -26,21 +29,21 @@ export async function amazon() {
     )
     .click();
 
-  // // Wait for the product page to load
-  // await page.waitForSelector(".centerColAlign", { timeout: 10000 });
+  //handle new tab in the window
+  const newPage = await pagePromise;
+
+  // Wait for the product page to load
+  await newPage.waitForSelector("//input[@id='buy-now-button']");
 
   // Get the text content of the productTitle span element
-  // const productTitleText = await page.textContent('//span[@id="productTitle"]');
-  // console.log("Product Title:", productTitleText.trim()); // Trim to remove any extra whitespace
+  const productTitleText = await newPage.textContent(
+    '//span[@id="productTitle"]'
+  );
 
-  // Capture product details
+  const productPriceText = await newPage.textContent(
+    '//*[@id="corePriceDisplay_desktop_feature_div"]/div[1]/span[3]/span[2]/span[2]'
+  );
 
-  // const productDetails = await page.evaluate(() => {
-  const Product = await page.locator("span#productTitle");
-  const firstProduct = Product.allInnerTexts();
-  console.log(firstProduct);
-
-  // });
-  // console.log("Amazon Product Details:", productDetails);
-  await page.waitForTimeout(5000);
+  console.log(productTitleText?.trim(), productPriceText);
+  await browser.close();
 }
