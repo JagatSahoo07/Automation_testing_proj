@@ -57,15 +57,14 @@ export async function flipkart() {
   );
 
   //Navigate to add to cart
-  await newPage
-    .locator(
-      ""
-    )
-    .dblclick();
+  await newPage.locator("//button[text()='Add to cart']").click();
 
-  await newPage.waitForTimeout(5000);
+  await newPage.waitForSelector(
+    '//*[@id="container"]/div/div[2]/div/div/div[1]/div/div[3]/div/form/button'
+  );
+  //   await newPage.waitForTimeout(5000);
   //Navigate to buy now
-  //   await newPage.getByText("Place Order").dblclick();
+  //   await newPage.getByText("Place Order").click();
 
   //Navigate to payment
   //For this process I need to sign in to my account, but as I cant share my personal details here I am skipping this step as it is just a click away.
