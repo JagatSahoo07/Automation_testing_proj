@@ -1,10 +1,12 @@
 import { test, chromium, expect } from "@playwright/test";
 
-var productTitleText;
-var productPriceText;
-var productUrl;
+//declaring variable
+var amz_productTitleText;
+var amz_productPriceText;
+var amz_productUrl;
 
 export async function amazon() {
+  //create broswer
   const browser = await chromium.launch({ headless: false });
   const context = await browser.newContext();
   const page = await context.newPage();
@@ -39,18 +41,36 @@ export async function amazon() {
   // Wait for the product page to load
   await newPage.waitForSelector("//input[@id='buy-now-button']");
 
-  // Get the text content of the productTitle span element
-  productTitleText = await newPage.textContent(
+  // Get product text content
+  amz_productTitleText = await newPage.textContent(
     '//span[@id="productTitle"]'
   );
 
-  productPriceText = await newPage.textContent(
+  //Get product price
+  amz_productPriceText = await newPage.textContent(
     '//*[@id="corePriceDisplay_desktop_feature_div"]/div[1]/span[3]/span[2]/span[2]'
   );
 
-  productUrl = await newPage.url()
+  //Get product Url
+  amz_productUrl = await newPage.url();
 
-  console.log(productTitleText?.trim(), productPriceText, productUrl);
-  
+  console.log(
+    amz_productTitleText?.trim(),
+    amz_productPriceText,
+    amz_productUrl
+  );
+
+  //Navigate to add to cart
+  await newPage.click(
+    "//div[@class='a-section a-spacing-none a-padding-none']//input[@id='add-to-cart-button']"
+  );
+
+  //Navigate to buy now
+  await newPage.click("//input[@name='proceedToRetailCheckout']");
+
+  //Navigate to payment
+
+  //For this process I need to sign in to my account, but as I cant share my personal details here I am skipping this step as it is just a click away.
+
   await browser.close();
 }
