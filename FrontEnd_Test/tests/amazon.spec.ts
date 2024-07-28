@@ -1,5 +1,9 @@
 import { test, chromium, expect } from "@playwright/test";
 
+var productTitleText;
+var productPriceText;
+var productUrl;
+
 export async function amazon() {
   const browser = await chromium.launch({ headless: false });
   const context = await browser.newContext();
@@ -36,14 +40,17 @@ export async function amazon() {
   await newPage.waitForSelector("//input[@id='buy-now-button']");
 
   // Get the text content of the productTitle span element
-  const productTitleText = await newPage.textContent(
+  productTitleText = await newPage.textContent(
     '//span[@id="productTitle"]'
   );
 
-  const productPriceText = await newPage.textContent(
+  productPriceText = await newPage.textContent(
     '//*[@id="corePriceDisplay_desktop_feature_div"]/div[1]/span[3]/span[2]/span[2]'
   );
 
-  console.log(productTitleText?.trim(), productPriceText);
+  productUrl = await newPage.url()
+
+  console.log(productTitleText?.trim(), productPriceText, productUrl);
+  
   await browser.close();
 }
